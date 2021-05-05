@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const fs = require('fs')
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 const generatePage = require('./src/page-template.js')
 
 const promptUser = () => {
@@ -178,22 +178,22 @@ const mockData = {
     ]
   };
 
-// promptUser()
-// .then(promptProject)
-// .then(portfolioData => {
-//     const pageHTML = generatePage(portfolioData);
-
-//     fs.writeFile('./index.html', generatePage(name, github), err => {
-//         if (err) throw new Error(err);
-
-//         console.log('Portfolio complete! Check out index.html to see the output!');
-//     });
-// });
-
-const pageHTML = generatePage(mockData);
-
-    fs.writeFile('./index.html', generatePage(mockData), err => {
-        if (err) throw new Error(err);
-
-        console.log('Portfolio complete! Check out index.html to see the output!');
-    });
+promptUser()
+.then(promptProject)
+.then(portfolioData => {
+    return generatePage(portfolioData);
+})
+.then(pageHTML => {
+    return writeFile(pageHTML);
+})
+.then(writeFileResponse => {
+    console.log(writeFileResponse);
+    return copyFile();
+})
+.then(copyFileResponse => {
+    console.log(copyFileResponse);
+})
+.catch(err => {
+    console.log(err);
+});
+   
